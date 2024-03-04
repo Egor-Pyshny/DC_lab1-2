@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "dc-1-2"
+version = "0.1.0"
+description = "distributed computing lab 1&2"
+authors = ["Egor251 <egorpyshny@gmail.com>"]
+readme = "README.md"
+packages = [{include = "dc_1_2"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["all"], version = "^0.110.0"}
+alembic = "^1.13.1"
+sqlalchemy = "^2.0.27"
+psycopg2 = "^2.9.9"
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
+websockets = "^12.0"
+wsproto = "^1.2.0"
+hypercorn = "^0.16.0"
+alembic-utils = "^0.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
