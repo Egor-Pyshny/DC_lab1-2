@@ -1,11 +1,10 @@
 import json
-from sqlite3 import IntegrityError
 from typing import List
 
-from psycopg2.errors import CheckViolation
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import Response
+from sqlalchemy.exc import IntegrityError
 from starlette import status
 
 from db.dbcore.dbcore import dbcore
@@ -76,7 +75,10 @@ def get_note(item_id):
 
 @app.delete("/api/v1.0/news/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_new(item_id):
-    return dbcore.delete_news(item_id)
+    if dbcore.delete_news(item_id) == 0:
+        return Response(status_code=400)
+    else:
+        return Response(status_code=204)
 
 
 @app.delete("/api/v1.0/users/{item_id}")
@@ -89,40 +91,54 @@ def delete_user(item_id):
 
 @app.delete("/api/v1.0/stickers/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_sticker(item_id):
-    return dbcore.delete_sticker(item_id)
+    if dbcore.delete_sticker(item_id) == 0:
+        return Response(status_code=400)
+    else:
+        return Response(status_code=204)
 
 
 @app.delete("/api/v1.0/notes/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_note(item_id):
-    return dbcore.delete_note(item_id)
+    if dbcore.delete_note(item_id) == 0:
+        return Response(status_code=400)
+    else:
+        return Response(status_code=204)
 
 
 @app.put("/api/v1.0/news", status_code=status.HTTP_200_OK)
 def update_new(item: NewsUpdateSchema):
-    stored_item_data = dbcore.get_new(item.news_id)
-    stored_item_model = NewsUpdateSchema(**stored_item_data)
-    update_data = item.dict(exclude_unset=True)
-    updated_item = stored_item_model.copy(update=update_data)
-    return dbcore.update_news(updated_item)
+    try:
+        return dbcore.update_news(item)
+    except IntegrityError as e:
+        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
+        return Response(status_code=400, content=json.dumps(res))
 
 
 @app.put("/api/v1.0/users", status_code=status.HTTP_200_OK)
 def update_user(item: UserUpdateSchema):
     try:
         return dbcore.update_user(item)
-    except Exception as e:
-        res = {"errorMessage":f"{e}", "errorCode":40022}
+    except IntegrityError as e:
+        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
         return Response(status_code=400, content=json.dumps(res))
 
 
 @app.put("/api/v1.0/stickers", status_code=status.HTTP_200_OK)
 def update_sticker(item: StickerUpdateSchema):
-    return dbcore.delete_sticker(item)
+    try:
+        return dbcore.update_sticker(item)
+    except IntegrityError as e:
+        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
+        return Response(status_code=400, content=json.dumps(res))
 
 
 @app.put("/api/v1.0/notes", status_code=status.HTTP_200_OK)
 def update_note(item: NoteUpdateSchema):
-    return dbcore.delete_note(item)
+    try:
+        return dbcore.update_note(item)
+    except IntegrityError as e:
+        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
+        return Response(status_code=400, content=json.dumps(res))
 
 # @app.patch("/items/{item_id}", response_model=Item)
 # def update_item(item_id: str, item: Item):

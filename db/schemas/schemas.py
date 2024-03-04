@@ -1,11 +1,11 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 
 class NewsAddSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-    userid: int
+    userid: int = Field(alias='userId')
     title: str
     content: str
 
@@ -13,7 +13,7 @@ class NewsAddSchema(BaseModel):
 class NewsSchema(NewsAddSchema):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-    news_id: int | None = None
+    id: int | None = None
     created: datetime
     modified: datetime
 
@@ -22,7 +22,7 @@ class NewsUpdateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     id: int
-    userid: int | None = None
+    userid: int | None = Field(alias='userId', default=None)
     title: str | None = None
     content: str | None = None
     id: int | None = None
@@ -58,7 +58,7 @@ class UserUpdateSchema(BaseModel):
 class NoteAddSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-    newsid: int
+    newsid: int = Field(alias='newsId')
     content: str
 
 
@@ -71,8 +71,8 @@ class NoteSchema(NoteAddSchema):
 class NoteUpdateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-    note_id: int
-    newsid: int | None = None
+    id: int
+    newsid: int | None = Field(alias='newsId', default=None)
     content: str | None = None
 
 
