@@ -44,7 +44,6 @@ class Sticker(Base):
         BIGINT,
         primary_key=True,
         autoincrement=True,
-        default=0,
         nullable=False,
         unique=True,
     )

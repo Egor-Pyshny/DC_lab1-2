@@ -4,33 +4,57 @@ from typing import List
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import Response
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
 from starlette import status
 
-from db.dbcore.dbcore import dbcore
+from db.dbcore.dbcore import SQLProvider
 from db.schemas.schemas import *
 
 app = FastAPI()
+dbcore = SQLProvider()
+
+
+def catch_check_error(e):
+    hash_code = abs(hash(e.args[0]))
+    first_two_digits = str(hash_code)[:2]
+    resp_status = 400
+    if isinstance(e, IntegrityError):
+        if "UniqueViolation" in e.args[0]:
+            resp_status = 403
+    res = {"errorMessage": f"{e.args[0]}", "errorCode": f"{resp_status}{first_two_digits}"}
+    return Response(status_code=resp_status, content=json.dumps(res))
 
 
 @app.post("/api/v1.0/news", response_model=NewsSchema, status_code=status.HTTP_201_CREATED)
 def create_news(news: NewsAddSchema):
-    return dbcore.create_news(news)
+    try:
+        return dbcore.create_news(news)
+    except (IntegrityError, DataError) as e:
+        return catch_check_error(e)
 
 
 @app.post("/api/v1.0/users", response_model=UserSchema, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserAddSchema):
-    return dbcore.create_user(user)
+    try:
+        return dbcore.create_user(user)
+    except (IntegrityError, DataError) as e:
+        return catch_check_error(e)
 
 
 @app.post("/api/v1.0/stickers", response_model=StickerSchema, status_code=status.HTTP_201_CREATED)
 def create_sticker(sticker: StickerAddSchema):
-    return dbcore.create_sticker(sticker)
+    try:
+        return dbcore.create_sticker(sticker)
+    except (IntegrityError, DataError) as e:
+        return catch_check_error(e)
 
 
 @app.post("/api/v1.0/notes", response_model=NoteSchema, status_code=status.HTTP_201_CREATED)
 def create_note(note: NoteAddSchema):
-    return dbcore.create_note(note)
+    try:
+        return dbcore.create_note(note)
+    except (IntegrityError, DataError) as e:
+        return catch_check_error(e)
 
 
 @app.get("/api/v1.0/news", response_model=List[NewsSchema], status_code=status.HTTP_200_OK)
@@ -110,8 +134,7 @@ def update_new(item: NewsUpdateSchema):
     try:
         return dbcore.update_news(item)
     except IntegrityError as e:
-        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
-        return Response(status_code=400, content=json.dumps(res))
+        return catch_check_error(e)
 
 
 @app.put("/api/v1.0/users", status_code=status.HTTP_200_OK)
@@ -119,8 +142,7 @@ def update_user(item: UserUpdateSchema):
     try:
         return dbcore.update_user(item)
     except IntegrityError as e:
-        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
-        return Response(status_code=400, content=json.dumps(res))
+        return catch_check_error(e)
 
 
 @app.put("/api/v1.0/stickers", status_code=status.HTTP_200_OK)
@@ -128,8 +150,7 @@ def update_sticker(item: StickerUpdateSchema):
     try:
         return dbcore.update_sticker(item)
     except IntegrityError as e:
-        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
-        return Response(status_code=400, content=json.dumps(res))
+        return catch_check_error(e)
 
 
 @app.put("/api/v1.0/notes", status_code=status.HTTP_200_OK)
@@ -137,17 +158,7 @@ def update_note(item: NoteUpdateSchema):
     try:
         return dbcore.update_note(item)
     except IntegrityError as e:
-        res = {"errorMessage": f"{e.args[0]}", "errorCode": 40022}
-        return Response(status_code=400, content=json.dumps(res))
-
-# @app.patch("/items/{item_id}", response_model=Item)
-# def update_item(item_id: str, item: Item):
-#     stored_item_data = items[item_id]
-#     stored_item_model = Item(**stored_item_data)
-#     update_data = item.dict(exclude_unset=True)
-#     updated_item = stored_item_model.copy(update=update_data)
-#     items[item_id] = jsonable_encoder(updated_item)
-#     return updated_item
+        return catch_check_error(e)
 
 
 if __name__ == "__main__":
