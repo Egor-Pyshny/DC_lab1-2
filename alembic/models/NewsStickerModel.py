@@ -71,7 +71,7 @@ class News(Base):
         nullable=False,
         unique=True,
     )
-    userid = Column(
+    userId = Column(
         BIGINT,
         ForeignKey('tbl_User.id'),
         nullable=False,

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from models.NewsStickerModel import News
+from alembic.models.NewsStickerModel import News
 from repositories.sql_repositories.news_repository import SQLNewsRepository
 from schemas.schemas import NewsAddSchema, NewsUpdateSchema, NewsSchema
 from services.data_provider_service.news_provider_base import NewsProviderBase
@@ -13,7 +13,7 @@ class NewsProvider(NewsProviderBase):
 
     def create_news(self, item: NewsAddSchema):
         res = News(
-                    userid=item.userid,
+                    userId=item.userid,
                     title=item.title,
                     content=item.content,
                     created=datetime.now(),
@@ -38,7 +38,7 @@ class NewsProvider(NewsProviderBase):
     def update_news(self, item: NewsUpdateSchema):
         res = News(
                     id=item.id,
-                    userid=item.userid,
+                    userId=item.userid,
                     title=item.title,
                     content=item.content,
                     created=datetime.now(),

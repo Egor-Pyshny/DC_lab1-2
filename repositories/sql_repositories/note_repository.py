@@ -1,6 +1,6 @@
 from sqlalchemy import select, delete
 
-from models.NoteModel import Note
+from alembic.models.NoteModel import Note
 from repositories.repository_base import RepositoryBase
 from repositories.sql_repositories import with_session, Session
 
@@ -37,8 +37,8 @@ class SQLNoteRepository(RepositoryBase):
         with Session() as session:
             with session.begin():
                 note = session.query(Note).get(item.id)
-                if item.newsid is not None:
-                    note.newsid = item.newsid
+                if item.newsId is not None:
+                    note.newsId = item.newsId
                 if item.content is not None:
                     note.content = item.content
         return note

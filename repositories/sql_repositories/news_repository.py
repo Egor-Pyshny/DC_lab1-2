@@ -1,6 +1,6 @@
 from sqlalchemy import select, delete
 
-from models.NewsStickerModel import News
+from alembic.models.NewsStickerModel import News
 from repositories.repository_base import RepositoryBase
 from repositories.sql_repositories import Session, with_session
 
@@ -40,8 +40,8 @@ class SQLNewsRepository(RepositoryBase):
             news.title = item.title
         if item.content is not None:
             news.content = item.content
-        if item.userid is not None:
-            news.userid = item.userid
+        if item.userId is not None:
+            news.userId = item.userId
         if item.created is not None:
             news.created = item.created
         if item.modified is not None:

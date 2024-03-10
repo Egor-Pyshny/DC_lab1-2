@@ -1,9 +1,8 @@
 from sqlalchemy import select, delete
 
-from models.UserModel import User
+from alembic.models.UserModel import User
 from repositories.repository_base import RepositoryBase
-from repositories.sql_repositories import Session, with_session
-from schemas.schemas import UserSchema
+from repositories.sql_repositories import with_session
 
 
 class SQLUserRepository(RepositoryBase):

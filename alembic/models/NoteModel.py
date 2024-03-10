@@ -18,7 +18,7 @@ class Note(Base):
         nullable=False,
         unique=True,
     )
-    newsid = Column(
+    newsId = Column(
         BIGINT,
         ForeignKey('tbl_News.id'),
         nullable=False,

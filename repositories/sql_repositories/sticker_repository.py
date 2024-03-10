@@ -1,6 +1,6 @@
 from sqlalchemy import select, delete
 
-from models.NewsStickerModel import Sticker
+from alembic.models.NewsStickerModel import Sticker
 from repositories.repository_base import RepositoryBase
 from repositories.sql_repositories import Session, with_session
 

@@ -1,4 +1,4 @@
-from models.UserModel import User
+from alembic.models.UserModel import User
 from repositories.sql_repositories.user_repository import SQLUserRepository
 from schemas.schemas import UserAddSchema, UserUpdateSchema, UserSchema
 from services.data_provider_service.user_provider_base import UserProviderBase

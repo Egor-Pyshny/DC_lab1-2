@@ -1,4 +1,4 @@
-from models.NoteModel import Note
+from alembic.models.NoteModel import Note
 from repositories.sql_repositories.note_repository import SQLNoteRepository
 from schemas.schemas import NoteUpdateSchema, NoteAddSchema, NoteSchema
 from services.data_provider_service.note_provider_base import NoteProviderBase
@@ -11,7 +11,7 @@ class NoteProvider(NoteProviderBase):
 
     def create_note(self, item: NoteAddSchema):
         res = Note(
-                    newsid=item.newsid,
+                    newsId=item.newsid,
                     content=item.content,
                 )
         note_orm = self.repository.create(res)
@@ -33,7 +33,7 @@ class NoteProvider(NoteProviderBase):
     def update_note(self, item: NoteUpdateSchema):
         res = Note(
                     id=item.id,
-                    newsid=item.newsid,
+                    newsId=item.newsid,
                     content=item.content,
                 )
         note_orm = self.repository.update(res)

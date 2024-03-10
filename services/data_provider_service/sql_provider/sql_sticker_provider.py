@@ -1,4 +1,4 @@
-from models.NewsStickerModel import Sticker
+from alembic.models.NewsStickerModel import Sticker
 from repositories.sql_repositories.sticker_repository import SQLStickerRepository
 from schemas.schemas import StickerUpdateSchema, StickerAddSchema, StickerSchema
 from services.data_provider_service.sticker_provider_base import StickerProviderBase
