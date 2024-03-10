@@ -25,7 +25,6 @@ class NewsUpdateSchema(BaseModel):
     userid: int | None = Field(alias='userId', default=None)
     title: str | None = None
     content: str | None = None
-    id: int | None = None
     created: datetime | None = None
     updated: datetime | None = None
 

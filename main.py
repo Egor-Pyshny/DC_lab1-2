@@ -7,11 +7,11 @@ from fastapi.responses import Response
 from sqlalchemy.exc import IntegrityError, DataError
 from starlette import status
 
-from db.dbcore.dbcore import SQLProvider
-from db.schemas.schemas import *
+from schemas.schemas import *
+from services.data_provider_service.data_provider import DataProvider
 
 app = FastAPI()
-dbcore = SQLProvider()
+dbcore = DataProvider()
 
 
 def catch_check_error(e):
